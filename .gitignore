@@ -1,0 +1,4 @@
+# ignore this while pushing
+node_modules/
+# environment variabels
+.env
