@@ -56,7 +56,7 @@ const signInController = async(req, res) =>{
         res.status(500).json({message: "Server error during user login"});
 }
 }
-const verifyUserController = async(req,res,next)=>{
+const verifyUserController = async(req,res) => {
     const token = req.cookies.token;
     try {
         if(token) {
@@ -71,4 +71,17 @@ const verifyUserController = async(req,res,next)=>{
         return res.status(403).json({ message: "Invalid token" });
     }
 }
-module.exports = { signUpController, signInController, verifyUserController }
+const signOutController = async(req, res) => {
+    try {
+        res.clearCookie("token", {
+            httpOnly: true,
+                secure: false,
+                sameSite: "strict",
+                path: "/"
+        })
+        res.status(200).json({message: "Logout successfull"});
+    } catch (error) {
+        console.log("Error while logout the user", error);
+    }
+}
+module.exports = { signUpController, signInController, verifyUserController, signOutController }
