@@ -1,5 +1,6 @@
 const express = require("express");
 const { signUpController, signInController, verifyUserController, signOutController } = require("../controllers/authController");
+const sendMail = require("../controllers/SendEmailController");
 const router = express.Router();
 
 // sign-up
@@ -10,4 +11,7 @@ router.post("/sign-in", signInController);
 router.get("/verify-me", verifyUserController);
 // sign-out
 router.post("/sign-out", signOutController);
+// forgot pass
+router.post("/forgot-password/:id", sendMail);
+
 module.exports = router;

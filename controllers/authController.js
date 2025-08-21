@@ -44,7 +44,9 @@ const signInController = async(req, res) =>{
                 sameSite: "strict",
                 maxAge: 30*24*60*60*1000
             });
-            res.status(200).json({message: "Sign-in successfull", data: {name: user.fullname,email: user.email}, token});
+            delete user.password;
+            delete user.__v;
+            res.status(200).json({message: "Sign-in successfull", data: { name: user.fullname, email: user.email, id: user._id}, token});
             } else {
                 res.status(401).json({message: "Invalid password"})
             }
