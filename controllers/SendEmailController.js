@@ -1,20 +1,16 @@
 const mailSender = require("../utils/mailSender");
-
+const User = require("../models/userSchema");
 const sendMail =async(req, res)=>{
-  console.log("body", req.body)
   try {
-    const { to, subject, text, html } = req.body;
 
-    if (!to || !subject || (!text && !html)) {
-      return res.status(400).json({ message: "Missing required fields" });
-    }
+    const findUser = await User.findOne({email:req.params.id})
 
-    const success = await mailSender({ to, subject, text, html });
-
-    if (success) {
+    
+    if (findUser) {
+      await mailSender({ email: req.params.id, user: findUser });
       return res.status(200).json({ message: "Email sent successfully" });
     } else {
-      return res.status(500).json({ message: "Failed to send email" });
+      return res.status(500).json({ message: "User not found" });
     }
   } catch (error) {
     console.error("API error:", error);

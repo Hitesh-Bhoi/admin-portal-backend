@@ -11,7 +11,6 @@ const signUpController = async(req,res)=>{
             res.status(409).json({message: "User already exists"});
         } else {
             const hasPass = await bcrypt.hash(req.body.password, 10);
-            console.log(hasPass)
             const payload = {
                 fullname: req.body.fullname,
                 email: req.body.email,
