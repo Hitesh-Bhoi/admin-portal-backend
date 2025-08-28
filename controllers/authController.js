@@ -72,6 +72,39 @@ const verifyUserController = async(req,res) => {
         return res.status(403).json({ message: "Invalid token" });
     }
 }
+
+const resetPasswordController =async(req,res) => {
+    // find user
+    const user = await User.findOne({
+        email: req.body.email
+    })
+
+    // user not found
+    if(!user) return res.status(404).json({message: "User not found"});
+
+    // user's reset password token is expired
+    if(!user.resetPasswordExpire || user.resetPasswordExpire < Date.now()) return res.status(400).json({message: "Token expired"});
+
+    // verfiy user reset password token
+    const verifyToken = await bcrypt.compare(req.body.token, user.resetPasswordToken);
+
+    // user reset password token is not valid
+    if(!verifyToken) return res.status(400).json({message: "Invalid token"});
+
+    // hash the new password
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+
+    // update new password in the user object 
+    user.password = hashedPassword;
+
+    // remove the reset password token and expiry time once the new password is set
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpire = undefined;
+
+    // update user with new password
+    await user.save();
+    return res.status(200).json({message: "Password reset successful"});
+}
 const signOutController = async(req, res) => {
     try {
         res.clearCookie("token", {
@@ -85,4 +118,4 @@ const signOutController = async(req, res) => {
         console.log("Error while logout the user", error);
     }
 }
-module.exports = { signUpController, signInController, verifyUserController, signOutController }
+module.exports = { signUpController, signInController, resetPasswordController, verifyUserController, signOutController }
