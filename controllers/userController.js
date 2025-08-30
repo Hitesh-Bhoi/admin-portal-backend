@@ -1,24 +1,27 @@
 const User = require("../models/userSchema");
 
-const getAllUsers = async(req, res) =>{
-    try {
-        const users = await User.find();
-        res.status(200).json({ data: users });
-    } catch (error) {
-        console.log("Error while getting all users", error);
-        res.status(500).json({ message: "Fetching all users data faild" });
-    }
+// All users
+const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+    res.status(200).json({ data: users });
+  } catch (error) {
+    console.log("Error while fetching all user details", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
 
-const getUser = async(req,res) => {
-    try {
-        const _id = req.params.id
-        const user = await User.findOne({_id});
-        res.status(200).json({ data: user });
-    } catch (error) {
-        console.log("Error while getting single user data", error);
-    }
-}
+// Single user
+const getUser = async (req, res) => {
+  try {
+    const _id = req.params.id;
+    const user = await User.findOne({ _id });
+    res.status(200).json({ data: user });
+  } catch (error) {
+    console.log("Error while fetching single user details", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
 
 // const updateSingleUser = async(req,res)=>{
 //     try {
@@ -28,5 +31,4 @@ const getUser = async(req,res) => {
 //     }
 // }
 
-module.exports = { getAllUsers, getUser, updateSingleUser }
-
+module.exports = { getAllUsers, getUser };
