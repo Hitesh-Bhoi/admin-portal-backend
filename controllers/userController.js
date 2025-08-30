@@ -10,5 +10,23 @@ const getAllUsers = async(req, res) =>{
     }
 };
 
-module.exports = { getAllUsers }
+const getUser = async(req,res) => {
+    try {
+        const _id = req.params.id
+        const user = await User.findOne({_id});
+        res.status(200).json({ data: user });
+    } catch (error) {
+        console.log("Error while getting single user data", error);
+    }
+}
+
+// const updateSingleUser = async(req,res)=>{
+//     try {
+//         console.log("body", req.body);
+//     } catch (error) {
+//         console.log("Error while updating user data", error);
+//     }
+// }
+
+module.exports = { getAllUsers, getUser, updateSingleUser }
 
