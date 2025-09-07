@@ -40,6 +40,7 @@ app.use(express.json());
 
 const port = process.env.PORT || 8000;
 
+// database connection
 connectDB();
 
 // Default API route
